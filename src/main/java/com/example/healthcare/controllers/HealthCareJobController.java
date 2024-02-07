@@ -32,7 +32,7 @@ import java.util.UUID;
 @RequestMapping("/healthcare")
 public class HealthCareJobController {
 
-    final HealthCareJobService healthCareJobService;
+    private final HealthCareJobService healthCareJobService;
 
     @Autowired
     private UserPJRepository userPJRepository;
@@ -58,8 +58,11 @@ public class HealthCareJobController {
         try {
             userPJRepository.findById(healthCareJobDto.getUserPJId()).map(user -> {
                 healthCareJob.setUserPJ(user);
-                    return ResponseEntity.status(HttpStatus.CREATED).body(healthCareJobService.save(healthCareJob));
+                return null;
             });
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(healthCareJobService.save(healthCareJob));
+
         }catch (Exception e){
             return ResponseEntity.notFound().build();
         }
@@ -77,7 +80,7 @@ public class HealthCareJobController {
     @GetMapping("/{id}")
     public ResponseEntity<Object>getHealthCareJobById(@PathVariable(value = "id")UUID id){
         Optional<HealthCareJob>healthCareJob = healthCareJobService.findById(id);
-        if(!healthCareJob.isPresent()){
+        if(healthCareJob.isEmpty()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This id doesn't exists.");
         }
         return ResponseEntity.status(HttpStatus.OK).body(healthCareJobService.findById(id));
@@ -98,9 +101,15 @@ public class HealthCareJobController {
                 }).orElse(ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/{id")
-    public ResponseEntity<HealthCareJob>deleteById(@PathVariable(value = "id")UUID id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object>deleteById(@PathVariable(value = "id")UUID id){
         Optional <HealthCareJob> healthCareJobToDelete = healthCareJobService.findById(id);
-        id()
+        if(healthCareJobToDelete.isEmpty()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Healthcare job id not found");
+        }else{
+            healthCareJobService.deleteById(healthCareJobToDelete.get().getId());
+            return ResponseEntity.status(HttpStatus.OK).body("id " + id + " deleted successfully!");
+        }
+
     }
 }
