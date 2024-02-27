@@ -2,17 +2,23 @@ package com.example.healthcare.models;
 
 import com.example.healthcare.enums.EducationStage;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @Entity
-@Data
+@Getter
+@Setter
+@RequiredArgsConstructor
 @ToString
 @Table(name="HEALTHCARE_JOB")
 public class HealthCareJob implements Serializable {
@@ -20,6 +26,7 @@ public class HealthCareJob implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Type(type="org.hibernate.type.UUIDCharType")
     private UUID id;
 
     @Column(nullable = false, length = 30)
@@ -38,9 +45,11 @@ public class HealthCareJob implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_uuid", nullable = false)
     @JsonIgnore
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private UserPJ UserPJ;
 
     @Column(nullable = false)
     private LocalDateTime createAt;
+
 
 }

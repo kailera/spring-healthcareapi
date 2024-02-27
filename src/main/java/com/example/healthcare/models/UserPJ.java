@@ -1,17 +1,21 @@
 package com.example.healthcare.models;
 
 import com.example.healthcare.enums.OrganizationType;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.io.Serializable;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
-@Data
+@Getter
+@Setter
+@RequiredArgsConstructor
 @ToString
 @Table(name="USER_PJ")
 public class UserPJ extends User {
+
 
     @Column(nullable = false, length = 30)
     private String organizationName;
@@ -22,6 +26,5 @@ public class UserPJ extends User {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private OrganizationType organizationType;
-
 
 }

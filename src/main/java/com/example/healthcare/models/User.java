@@ -1,12 +1,19 @@
 package com.example.healthcare.models;
 
-import lombok.Data;
+import lombok.*;
+import org.hibernate.Hibernate;
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @MappedSuperclass
 public class User implements Serializable {
 
@@ -14,6 +21,7 @@ public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Type(type="org.hibernate.type.UUIDCharType")
     private UUID id;
 
     @Column(nullable = false, length = 50)
@@ -24,4 +32,6 @@ public class User implements Serializable {
 
     @Column(nullable = false)
     private LocalDateTime createAt;
+
+
 }

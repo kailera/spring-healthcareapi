@@ -2,9 +2,9 @@ package com.example.healthcare.controllers;
 
 import com.example.healthcare.dtos.requests.HealthCareJobDto;
 import com.example.healthcare.models.HealthCareJob;
-import com.example.healthcare.models.UserPF;
-import com.example.healthcare.repositories.UserPJRepository;
+import com.example.healthcare.models.UserPJ;
 import com.example.healthcare.services.HealthCareJobService;
+import com.example.healthcare.services.UserPJService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,44 +33,32 @@ import java.util.UUID;
 public class HealthCareJobController {
 
     private final HealthCareJobService healthCareJobService;
-
+    private final UserPJService userPJService;
     @Autowired
-    private UserPJRepository userPJRepository;
-
-    public HealthCareJobController( HealthCareJobService healthCareJobService) {
-       this.healthCareJobService = healthCareJobService;
+    public HealthCareJobController (HealthCareJobService healthCareJobService, UserPJService userPJService){
+        this.healthCareJobService = healthCareJobService;
+        this.userPJService = userPJService;
     }
-
-    // healthcare job add
 
     //@Valid enable the validations on dto
     @PostMapping
     public ResponseEntity<Object>saveHealthCareJob(@RequestBody @Valid HealthCareJobDto healthCareJobDto){
+        System.out.println(healthCareJobDto);
 
         var healthCareJob = new HealthCareJob();
-        //dto to model copy data
-        BeanUtils.copyProperties(healthCareJobDto, healthCareJob);
-
-        //updates
-        healthCareJob.setCreateAt(LocalDateTime.now(ZoneId.of("UTC")));
-
-        // find user
-        try {
-            userPJRepository.findById(healthCareJobDto.getUserPJId()).map(user -> {
-                healthCareJob.setUserPJ(user);
-                return null;
-            });
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(healthCareJobService.save(healthCareJob));
-
-        }catch (Exception e){
-            return ResponseEntity.notFound().build();
-        }
-
+        UserPJ userPJ = userPJService.findById(healthCareJobDto.getUserPJId())
+                .map(userPJ1 -> {
+                    BeanUtils.copyProperties(healthCareJobDto, healthCareJob);
+                    healthCareJob.setUserPJ(userPJ1);
+                    healthCareJob.setCreateAt(LocalDateTime.now(ZoneId.of("UTC")));
+                    return healthCareJobService.save(healthCareJob);
+                }).orElseThrow().getUserPJ();
+       return  new ResponseEntity<>(healthCareJob, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<HealthCareJob>>getHealtCareJob(){
+    public ResponseEntity<List<HealthCareJob>>getHealthCareJob(){
+        System.out.println("healthcare all chamado");
         if (healthCareJobService.findAll().isEmpty()){
             return ResponseEntity.notFound().build();
         }

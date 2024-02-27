@@ -29,7 +29,9 @@ UserPJController {
     // dependency injection
     @Autowired
     public UserPJController(UserPJService userPJService){
+
         this.userPJService = userPJService;
+
     }
 
     // CRUD OPERATIONS - ALL OPERATIONS OK
@@ -55,12 +57,17 @@ UserPJController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object>getUserPJ(@PathVariable(value = "id")UUID id){
+    public ResponseEntity<UserPJ> getUserPJ(@PathVariable(value = "id")UUID id){
+
         Optional<UserPJ> userPJOptional = userPJService.findById(id);
-        if (!userPJOptional.isPresent()){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Id not found");
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(userPJOptional);
+
+        System.out.println(userPJOptional);
+
+        return userPJOptional
+                .map(user -> ResponseEntity.ok(user))
+                .orElse(ResponseEntity
+                        .status(HttpStatus.NOT_FOUND).build());
+
     }
 
     @PutMapping("/{id}")

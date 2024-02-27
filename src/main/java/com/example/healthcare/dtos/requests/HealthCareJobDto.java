@@ -2,6 +2,8 @@ package com.example.healthcare.dtos.requests;
 
 import com.example.healthcare.enums.EducationStage;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -10,6 +12,8 @@ import javax.validation.constraints.Size;
 import java.util.UUID;
 
 @Data
+@Getter
+@Setter
 public class HealthCareJobDto {
 
     @NotBlank
