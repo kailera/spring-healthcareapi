@@ -23,8 +23,9 @@ Hospedagem: Heroku
 ### API
 
 endpoints:
-/organization:
-/jobs: Trabalhos e contratos emitidos por instituições:
+/organization: CRUD de instituições médicas públicas
+/profissional: CRUD de profissionais
+/jobs: CRUD de trabalhos (todo job é emitido por uma organization)
 
 
 
