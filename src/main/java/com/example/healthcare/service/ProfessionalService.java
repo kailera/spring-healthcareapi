@@ -18,7 +18,7 @@ public class ProfessionalService {
     @Autowired
     public ProfessionalRepository professionalRepository;
 
-    private ModelMapper modelMapper = new ModelMapper();
+    private final ModelMapper modelMapper = new ModelMapper();
 
     public ProfessionalResponseDTO createProfessional (Professional professional){
         Professional savedProfessional = professionalRepository.save(professional);
@@ -46,4 +46,13 @@ public class ProfessionalService {
         professionalRepository.deleteById(id);
         return null;
     }
+
+    public boolean existsByCpf(String cpf){
+        return professionalRepository.existsByCpf(cpf);
+    }
+
+    public Optional<Professional> findByCpf(String cpf){
+        return professionalRepository.findByCpf(cpf);
+    }
+
 }

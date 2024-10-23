@@ -1,6 +1,8 @@
 package com.example.healthcare.controller;
 
 import com.example.healthcare.dto.ProfessionalResponseDTO;
+import com.example.healthcare.exception.professionalExceptions.ProfessionalAlreadyExistsException;
+import com.example.healthcare.exception.professionalExceptions.ProfessionalNotFoundException;
 import com.example.healthcare.model.Professional;
 import com.example.healthcare.repository.ProfessionalRepository;
 import com.example.healthcare.service.ProfessionalService;
@@ -27,24 +29,21 @@ public class ProfessionalController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> createProfessional(@RequestBody Professional professional){
-        professional.setCreateAt(LocalDateTime.now(ZoneId.of("UTC")));
-        try{
-            ProfessionalResponseDTO responseDTO = professionalService.createProfessional(professional);
-            return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body( e.getMessage());
+    public ResponseEntity<ProfessionalResponseDTO> createProfessional(@RequestBody Professional professional) throws Exception {
+        if(professionalService.existsByCpf(professional.getCpf())){
+            throw new ProfessionalAlreadyExistsException("Profissional já cadastrado");
         }
+        ProfessionalResponseDTO createdProfessional = professionalService.createProfessional(professional);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdProfessional);
     }
 
     @GetMapping
-    public ResponseEntity getAllProfessionals(){
+    public ResponseEntity getAllProfessionals() throws Exception {
         try {
-
             List<ProfessionalResponseDTO> responseDTOList = professionalService.getAllProfessional();
             return ResponseEntity.status(HttpStatus.OK).body(responseDTOList);
         }catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            throw new Exception("A error has ocurred. Try later");
         }
     }
 
@@ -52,15 +51,19 @@ public class ProfessionalController {
     public ResponseEntity<Optional<Professional>> getProfessionalById (@PathVariable UUID id){
 
         Optional<Professional> response = professionalService.getProfessionalById(id);
-        HttpStatus status = (response.isEmpty()) ? HttpStatus.NOT_FOUND : HttpStatus.OK;
-        return new ResponseEntity<>(response, status);
+        if(response.isEmpty()){
+            throw new ProfessionalNotFoundException("Professional not found");
+        }
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping
     public ResponseEntity deleteById (@PathVariable UUID id){
         Optional professional = professionalService.deleteById(id);
-        HttpStatus status = (professional.isEmpty()) ? HttpStatus.NOT_FOUND : HttpStatus.OK;
-        return  new ResponseEntity<>(professional, status);
+        if(professional.isEmpty()){
+            throw new ProfessionalNotFoundException("Professional not found");
+        }
+        return  new ResponseEntity<>(professional, HttpStatus.OK);
     }
 
 }

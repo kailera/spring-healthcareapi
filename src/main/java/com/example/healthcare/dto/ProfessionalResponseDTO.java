@@ -18,8 +18,6 @@ import java.io.Serializable;
 @Setter
 public class ProfessionalResponseDTO implements Serializable {
     private String nome;
-    private  String phone;
-    private  String email;
     private  String cnpj;
     private Especialidade especialidade;
     private NivelEducacional nivelEducacional;
