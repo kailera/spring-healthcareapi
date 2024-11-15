@@ -3,37 +3,28 @@ package com.example.healthcare.model;
 import com.example.healthcare.enuns.Especialidade;
 import com.example.healthcare.enuns.NivelEducacional;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.JdbcTypeCode;
 
 import java.sql.Types;
+import java.util.List;
 import java.util.UUID;
 
-@Entity(name = "tb_professional")
-@Data
+@Entity
+@Table(name="tb_professional")
+@EqualsAndHashCode(callSuper=false)
+
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "professional")
-public class Professional {
+public class Professional extends User {
 
-    @Id
-    @GeneratedValue(generator =  "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "VARCHAR(36)")
-    @JdbcTypeCode(Types.VARCHAR)
-    private UUID id;
 
     @Column(nullable = false)
     private String cpf;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String cnpj;
-
-    @Column
-    private String nome;
 
     @Column
     private Especialidade especialidade;
@@ -41,9 +32,9 @@ public class Professional {
     @Column
     private NivelEducacional nivelEducacional;
 
-    @Column
-    private boolean isRegistered;
 
-    @Column
-    private boolean isAvailable;
+    @OneToMany(mappedBy = "professional", cascade = CascadeType.ALL)
+    private List<Contract> contracts;
+
+
 }

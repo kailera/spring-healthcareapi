@@ -3,30 +3,17 @@ package com.example.healthcare.model;
 import com.example.healthcare.enuns.TipoOrganizacao;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.JdbcTypeCode;
 
-import java.sql.Types;
 import java.util.List;
 import java.util.UUID;
 
-@Entity(name="tb_organization")
-@Data
-@Builder
+@Entity
+@Table(name = "tb_organization")
+@EqualsAndHashCode(callSuper=false)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter@Setter
-@Table(name = "organization")
-public class Organization {
-
-    @Id
-    @GeneratedValue(generator =  "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "VARCHAR(36)")
-    @JdbcTypeCode(Types.VARCHAR)
-    private UUID id;
-
+public class Organization extends User {
     @Column
     private String cnpj;
 
@@ -39,7 +26,12 @@ public class Organization {
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Work> works;
 
+    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
+    private List<Contract> contracts;
+
 
     public Organization(UUID uuid, String cpnj, String razaoSocial, TipoOrganizacao tipoOrganizacao) {
     }
+
+
 }

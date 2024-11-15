@@ -8,6 +8,7 @@ import com.example.healthcare.service.OrganizationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,20 +18,17 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 import java.util.UUID;
 
+
 @RestController
+@RequestMapping("/org")
+@RequiredArgsConstructor
 @Tag(name="Organization", description = "Operações relacionadas a organizações")
 public class OrganizationController {
     private final OrganizationService organizationService;
-
-    @Autowired
-    public OrganizationController (OrganizationService organizationService){
-        this.organizationService = organizationService;
-    }
-
     private ModelMapper modelMapper = new ModelMapper();
 
 
-    @PostMapping("/org")
+    @PostMapping("/")
     @Operation(summary = "Criar organização",
             description = "Criar organização a partir de cuidado recebido",
             tags ={"Organization"},
@@ -49,7 +47,7 @@ public class OrganizationController {
             return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
-    @GetMapping("/org")
+    @GetMapping("/")
     @Operation(summary = "Buscar todas as organizações",
             description = "Buscar todas as organizações",
             tags ={"Organization"},
@@ -67,7 +65,7 @@ public class OrganizationController {
         }
     }
 
-    @GetMapping("/org/{id}")
+    @GetMapping("/{id}")
     @Operation(summary = "Buscar organização por id",
             description = "Buscar Organização por id",
             tags ={"Organization"},
@@ -76,7 +74,7 @@ public class OrganizationController {
                     @ApiResponse(responseCode = "500", description = "Busca não concluída"),
             }
     )
-    public ResponseEntity <Optional<Organization>> getOrganizationById(@PathVariable UUID id){
+    public ResponseEntity <Optional<Organization>> getOrganizationById(@PathVariable Long id){
         Optional<Organization> response = organizationService.findById(id);
         if(response.isEmpty()){
             throw  new OrganizationNotFoundException("Organização não cadastrada");
@@ -85,7 +83,7 @@ public class OrganizationController {
     }
 
 
-    @DeleteMapping("/org/{id}")
+    @DeleteMapping("/{id}")
     @Operation(summary = "Deletar organização",
             description = "Deletar organização",
             tags ={"Organization"},
@@ -94,7 +92,7 @@ public class OrganizationController {
                     @ApiResponse(responseCode = "404", description = "Operação não concluída")
             }
     )
-    public ResponseEntity<Optional<Organization>> deleteOrganizationById(@PathVariable UUID id){
+    public ResponseEntity<Optional<Organization>> deleteOrganizationById(@PathVariable Long id){
         Optional<Organization> response = organizationService.deleteById(id);
         if(response.isEmpty()){
             throw  new OrganizationNotFoundException("Organização não cadastrada");

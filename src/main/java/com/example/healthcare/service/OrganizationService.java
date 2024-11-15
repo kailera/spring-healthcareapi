@@ -4,7 +4,6 @@ import com.example.healthcare.dto.OrganizationResponseDTO;
 import com.example.healthcare.model.Organization;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.healthcare.repository.OrganizationRepository;
 
@@ -40,7 +39,7 @@ public class OrganizationService {
     }
 
     // auth request (for future purpose)
-    public Optional<Organization> findById(UUID id){
+    public Optional<Organization> findById(Long id){
         return organizationRepository.findById(id);
     }
 
@@ -51,7 +50,7 @@ public class OrganizationService {
     }
 
     @Transactional
-    public Optional<Organization>deleteById(UUID id){
+    public Optional<Organization>deleteById(Long id){
         organizationRepository.deleteById(id);
         return null;
     }

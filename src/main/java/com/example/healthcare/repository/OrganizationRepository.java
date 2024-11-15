@@ -7,9 +7,10 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface OrganizationRepository extends JpaRepository<Organization, UUID> {
+public interface OrganizationRepository extends JpaRepository<Organization, Long> {
     boolean existsByCnpj(String cnpj);
 
     Optional<Organization> findByCnpj(String cnpj);
 
+    Optional<Organization> findById(Long organizationId);
 }

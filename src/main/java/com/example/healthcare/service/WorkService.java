@@ -5,12 +5,10 @@ import com.example.healthcare.model.Work;
 import com.example.healthcare.repository.OrganizationRepository;
 import com.example.healthcare.repository.WorkRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class WorkService {
@@ -21,7 +19,7 @@ public class WorkService {
     @Autowired
     private OrganizationRepository organizationRepository;
 
-    public Work createWork(UUID organizationId, Work work){
+    public Work createWork(Long organizationId, Work work){
         Optional<Organization> organizationOptional = organizationRepository.findById(organizationId);
 
         if(organizationOptional.isPresent()){
@@ -32,7 +30,7 @@ public class WorkService {
         }
     }
 
-    public List<Work> getAllWorksByOrganization (UUID organizationId){
+    public List<Work> getAllWorksByOrganization (Long organizationId){
         return workRepository.findByOrganizationId(organizationId);
     }
 

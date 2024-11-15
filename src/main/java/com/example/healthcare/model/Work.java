@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 /*
 Work é feito por uma organização que oferta um trabalho a ser preenchido por um profissional
  */
@@ -34,6 +36,12 @@ public class Work {
 
     @Column
     private NivelEducacional nivelEducacional;
+
+    @Column(nullable = true)
+    private LocalDate initialDate;
+
+    @Column(nullable = true)
+    private LocalDate finalDate;
 
     @ManyToOne
     @JoinColumn(name = "organization_id", nullable = false)

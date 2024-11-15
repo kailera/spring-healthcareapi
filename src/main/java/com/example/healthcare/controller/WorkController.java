@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -48,7 +47,7 @@ public class WorkController {
             }
     )
 
-    public ResponseEntity<WorkResponseDTO> createWork(@PathVariable UUID id, @RequestBody Work work){
+    public ResponseEntity<WorkResponseDTO> createWork(@PathVariable Long id, @RequestBody Work work){
 
         // verificar se a organizacao existe
         if(organizationService.findById(id).isEmpty()){
@@ -71,7 +70,7 @@ public class WorkController {
             }
     )
 
-    public ResponseEntity<List<WorkResponseDTO>>getAllWorkByOrganization(@PathVariable UUID id) throws Exception{
+    public ResponseEntity<List<WorkResponseDTO>>getAllWorkByOrganization(@PathVariable Long id) throws Exception{
         try{
             List<WorkResponseDTO> workList = workService.getAllWorksByOrganization(id)
                     .stream()

@@ -1,6 +1,9 @@
 package com.example.healthcare.enuns;
 
 public enum Especialidade {
+    NUTRICIONISTA,
+    FISIOTERAPEUTA,
+    CUIDADOR_DE_IDOSOS,
     ENFERMEIRO,
     FARMACEUTICO,
     TECNICO_ENFERMAGEM,
