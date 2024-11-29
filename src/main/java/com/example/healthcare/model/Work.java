@@ -12,6 +12,7 @@ import java.time.LocalDate;
 Work é feito por uma organização que oferta um trabalho a ser preenchido por um profissional
  */
 @Entity
+@Table(name = "tb_work")
 @Data
 @Builder
 @NoArgsConstructor

@@ -12,24 +12,25 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
+@PrimaryKeyJoinColumn(name = "professional_id")
 @Table(name="tb_professional")
 @EqualsAndHashCode(callSuper=false)
-
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Professional extends User {
-
-
+    
     @Column(nullable = false)
     private String cpf;
 
     @Column(nullable = true)
     private String cnpj;
 
-    @Column
+    @Enumerated(EnumType.STRING)
     private Especialidade especialidade;
 
-    @Column
+    @Enumerated(EnumType.STRING)
     private NivelEducacional nivelEducacional;
 
 
@@ -37,4 +38,6 @@ public class Professional extends User {
     private List<Contract> contracts;
 
 
+    public Professional(String cpf, String cnpj, Especialidade especialidade, NivelEducacional nivelEducacional) {
+    }
 }

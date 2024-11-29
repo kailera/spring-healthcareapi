@@ -28,7 +28,7 @@ public class OrganizationController {
     private ModelMapper modelMapper = new ModelMapper();
 
 
-    @PostMapping("/")
+    @PostMapping
     @Operation(summary = "Criar organização",
             description = "Criar organização a partir de cuidado recebido",
             tags ={"Organization"},
@@ -47,7 +47,7 @@ public class OrganizationController {
             return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
-    @GetMapping("/")
+    @GetMapping
     @Operation(summary = "Buscar todas as organizações",
             description = "Buscar todas as organizações",
             tags ={"Organization"},

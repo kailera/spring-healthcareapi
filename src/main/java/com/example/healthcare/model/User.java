@@ -1,17 +1,17 @@
 package com.example.healthcare.model;
 
+import com.example.healthcare.enuns.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.JdbcTypeCode;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.sql.Types;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
-@Entity
 @Table(name="tb_user")
 @Data
 @Builder
@@ -20,12 +20,12 @@ import java.util.UUID;
 @Getter
 @Setter
 @Inheritance(strategy = InheritanceType.JOINED) // Estratégia JOINED para dividir as tabelas
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="user_id")
-    private Long id;
+    @Column(name="id")
+    private long id;
 
 
     /**informações comuns **/
@@ -35,12 +35,17 @@ public class User {
     @Column (nullable = true, unique = true)
     private String phone;
 
+    @Column
     private String password;
+
+
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
 
     /**informações de controle e verificação **/
 
-    @Column(nullable = true)
+    @Column
     private String verificationCode;
 
     @Column
@@ -55,17 +60,55 @@ public class User {
     private Instant createAt;
 
 
-    /** Relacionamentos **/
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name="tb_user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name="role_id"))
-    private List<Role> roles;
-
-
-    public User(String email, String hashedPassword) {
+    public User (Long id, String email, String password, String phone, UserRole role){
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
+        this.role = role;
     }
 
 
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (this.role == UserRole.PROFESSIONAL){
+            return List.of(new SimpleGrantedAuthority("ROLE_PROFESSIONAL"), new SimpleGrantedAuthority("ROLE_USER"));
+        } else if ( this.role == UserRole.ORGANIZATION) {
+            return List.of(new SimpleGrantedAuthority("ROLE_ORGANIZATION"), new SimpleGrantedAuthority("ROLE_USER"));
+        } else if (this.role == UserRole.ADMIN) {
+            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"),
+                    new SimpleGrantedAuthority("ROLE_USER"),
+                    new SimpleGrantedAuthority("ROLE_PROFESSIONAL"),
+                    new SimpleGrantedAuthority("ROLE_ORGANIZATION"));
+        }else{
+            return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        }
+
+    }
+
+    @Override
+    public String getUsername() {
+        return email ;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

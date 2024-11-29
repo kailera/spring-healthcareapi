@@ -8,20 +8,15 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "contract")
+@Table(name = "tb_contract")
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 
 public class Contract {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-
-    @Enumerated(EnumType.STRING)
-    private ContractStatus contractStatus = ContractStatus.PENDING;
 
     @OneToOne
     private Work work;
@@ -37,6 +32,16 @@ public class Contract {
     @OneToMany(mappedBy = "contract", cascade = CascadeType.ALL)
     private List<Payment> paymentList = new java.util.ArrayList<>();
 
+    @Enumerated(EnumType.STRING)
+    private ContractStatus contractStatus = ContractStatus.PENDING;
 
+    @Column(nullable = false)
+    private boolean professionalSigned = false;
+
+    @Column(nullable = false)
+    private boolean organizationSigned = false;
+
+    @Column(nullable = false)
+    private String contractDocumentPath ;
 
 }

@@ -41,7 +41,7 @@ public class ProfessionalController {
         this.smsService = smsService;
     }
 
-    @PostMapping("/")
+    @PostMapping
     @Operation(summary = "Criar Profissional",
             description = "Criar organização a partir de dados do req body. Opções default: " +
                     "isRegistered: False, por que ainda precisa confirmar via sms." +

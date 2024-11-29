@@ -1,7 +1,13 @@
 package com.example.healthcare.enuns;
 
 public enum TipoOrganizacao {
-    HOSPITAL,
-    CLINICA_MEDICA,
-    EMERGENCIAL
+    HOSPITAL("hospital"),
+    CLINICA_MEDICA("clinica medica"),
+    EMERGENCIAL("emergencial");
+
+    private String tipoOrganizacao;
+
+    TipoOrganizacao(String tipoOrganizacao){
+        this.tipoOrganizacao = tipoOrganizacao;
+    }
 }

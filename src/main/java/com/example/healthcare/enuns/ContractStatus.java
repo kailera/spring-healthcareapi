@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum ContractStatus {
     PENDING (1),
-    ACCEPTED (2),
+    SIGNED (2),
     CANCELLED(3);
 
     public int statusCode;
